@@ -1,0 +1,15 @@
+// Example: User joining a tournament
+function joinTournament(userId, tournamentId){
+  db.collection("participants").add({
+    user_id: userId,
+    tournament_id: tournamentId,
+    status: "registered",
+    join_time: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert("Successfully joined tournament!");
+  })
+  .catch((error) => {
+    console.error("Error joining tournament: ", error);
+  });
+}
