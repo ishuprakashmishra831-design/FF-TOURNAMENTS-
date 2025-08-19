@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Free Fire Tournament Login</title>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+
+    const SUPABASE_URL = "https://YOUR-PROJECT-URL.supabase.co"
+    const SUPABASE_KEY = "YOUR-ANON-KEY"
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    async function loginPlayer(e) {
+      e.preventDefault()
+
+      const gaming_uid = document.getElementById("gaming_uid").value
+      const mobile_number = document.getElementById("mobile_number").value
+
+      const { data, error } = await supabase
+        .from("players")
+        .select("*")
+        .eq("gaming_uid", gaming_uid)
+        .eq("mobile_number", mobile_number)
+        .maybeSingle()
+
+      if (error || !data) {
+        document.getElementById("result").innerText = "❌ Invalid UID or Mobile Number!"
+      } else {
+        document.getElementById("result").innerText = 
+          "✅ Welcome " + data.username + " (" + data.freefire_name + ")"
+      }
+    }
+
+    window.loginPlayer = loginPlayer
+  </script>
+</head>
+<body>
+  <h2>Player Login</h2>
+  <form id="loginForm" onsubmit="loginPlayer(event)">
+    <input type="text" id="gaming_uid" placeholder="Gaming UID" required><br><br>
+    <input type="text" id="mobile_number" placeholder="Mobile Number" required><br><br>
+    <button type="submit">Login</button>
+  </form>
+  <p id="result"></p>
+</body>
+</html>
